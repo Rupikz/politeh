@@ -1,9 +1,8 @@
+import { Table } from 'console-table-printer';
 import { rl, questionPromise } from './readlineSettings';
 import {
   isNumber, color, ctg, lengthAfterFixedPoint,
 } from './util';
-
-const { Table } = require('console-table-printer');
 
 const num = 42;
 
