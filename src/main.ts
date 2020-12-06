@@ -68,6 +68,11 @@ const question = async (): Promise<InputsParameters> => {
     if (!isNumber(valueDeltaX)) {
       throw Error('Введите число');
     }
+
+    if (valueDeltaX === 0) {
+      throw Error('Шаг не может быть равен нулю');
+    }
+
     rl.output.write(color.green(`deltaX = ${valueDeltaX}`));
 
     const сalculationRange: InputsParameters = {
