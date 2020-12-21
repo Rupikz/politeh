@@ -18,20 +18,20 @@ interface Calculation {
   F: number,
 }
 
-const сalculationEvenNumber = (currentX: number): number => Math.max(
+const calculationEvenNumber = (currentX: number): number => Math.max(
   Math.log((1 - num) / Math.sin(currentX + num)),
   Math.abs(ctg(currentX) / num),
 );
 
-const сalculationOddNumber = (currentX: number): number => Math.min(
+const calculationOddNumber = (currentX: number): number => Math.min(
   Math.log((1 - num) / Math.cos(currentX - num)),
   Math.tan(currentX) / num,
 );
 
 const сalculationNumber = (X: number): number => (
   X % 2 === 0
-    ? сalculationEvenNumber(X)
-    : сalculationOddNumber(X));
+    ? calculationEvenNumber(X)
+    : calculationOddNumber(X));
 
 const calculation = (parameters: InputsParameters): Calculation[] => {
   const fixedLength = lengthAfterFixedPoint(parameters.deltaX);
@@ -69,7 +69,7 @@ const question = async (): Promise<InputsParameters> => {
       throw Error('Введите число');
     }
 
-    if (valueDeltaX === 0) {
+    if (+valueDeltaX === 0) {
       throw Error('Шаг не может быть равен нулю');
     }
 
