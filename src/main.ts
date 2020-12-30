@@ -15,7 +15,7 @@ interface InputsParameters {
 interface Calculation {
   n: number,
   Xn: number,
-  F: number,
+  F: number | string
 }
 
 const calculationEvenNumber = (currentX: number): number => Math.max(
@@ -28,25 +28,28 @@ const calculationOddNumber = (currentX: number): number => Math.min(
   Math.tan(currentX) / num,
 );
 
-const сalculationNumber = (X: number): number => (
-  X % 2 === 0
+const calculationNumber = (X: number): number => (
+  Math.abs(X % 2) === 0
     ? calculationEvenNumber(X)
     : calculationOddNumber(X));
 
 const calculation = (parameters: InputsParameters): Calculation[] => {
   const fixedLength = lengthAfterFixedPoint(parameters.deltaX);
-  let i = parameters.a;
   const data: Calculation[] = [];
   let index = 1;
-  while (i <= parameters.b) {
+
+  for (let i = parameters.a; i !== parameters.b + parameters.deltaX;
+    i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
+    const calcF = calculationNumber(i);
+    const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
     data.push({
       n: index,
       Xn: i,
-      F: сalculationNumber(i),
+      F,
     });
-    i = Number((parameters.deltaX + i).toFixed(fixedLength));
     index += 1;
   }
+
   return data;
 };
 
@@ -75,13 +78,13 @@ const question = async (): Promise<InputsParameters> => {
 
     rl.output.write(color.green(`deltaX = ${valueDeltaX}`));
 
-    const сalculationRange: InputsParameters = {
+    const calculationRange: InputsParameters = {
       a: Number(valueA),
       b: Number(valueB),
       deltaX: Number(valueDeltaX),
     };
 
-    return сalculationRange;
+    return calculationRange;
   } catch (err) {
     rl.output.write(color.red(err.message));
     return question();
