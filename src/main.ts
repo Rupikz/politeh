@@ -38,16 +38,36 @@ const calculation = (parameters: InputsParameters): Calculation[] => {
   const data: Calculation[] = [];
   let index = 1;
 
-  for (let i = parameters.a; i !== parameters.b + parameters.deltaX;
-    i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
-    const calcF = calculationNumber(i);
-    const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
-    data.push({
-      n: index,
-      Xn: i,
-      F,
-    });
-    index += 1;
+  if (parameters.deltaX < 0) {
+    for (let i = parameters.a;
+      i > parameters.b + parameters.deltaX;
+      i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
+      const calcF = calculationNumber(i);
+
+      const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
+
+      data.push({
+        n: index,
+        Xn: i,
+        F,
+      });
+      index += 1;
+    }
+  } else {
+    for (let i = parameters.a;
+      i < parameters.b + parameters.deltaX;
+      i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
+      const calcF = calculationNumber(i);
+
+      const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
+
+      data.push({
+        n: index,
+        Xn: i,
+        F,
+      });
+      index += 1;
+    }
   }
 
   return data;
@@ -70,6 +90,14 @@ const question = async (): Promise<InputsParameters> => {
     const valueDeltaX = await questionPromise('Введите шаг изменения переменной\n---> ');
     if (!isNumber(valueDeltaX)) {
       throw Error('Введите число');
+    }
+
+    if (+valueA === +valueB) {
+      throw Error('Начальное и конечное значение равны');
+    }
+
+    if (+valueA > +valueB && Math.sign(valueDeltaX) > 0) {
+      throw Error('При нач. > кон. шаг не может быть положительным');
     }
 
     if (+valueDeltaX === 0) {
