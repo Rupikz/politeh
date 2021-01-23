@@ -1,7 +1,7 @@
 import { Table } from 'console-table-printer';
 import { rl, questionPromise } from './readlineSettings';
 import {
-  isNumber, color, ctg, lengthAfterFixedPoint,
+  isNumber, color, ctg,
 } from './util';
 
 const num = 42;
@@ -34,52 +34,31 @@ const calculationNumber = (X: number): number => (
     : calculationOddNumber(X));
 
 const calculation = (parameters: InputsParameters): Calculation[] => {
-  const fixedLength = lengthAfterFixedPoint(parameters.deltaX);
   const data: Calculation[] = [];
   let index = 1;
 
-  if (parameters.deltaX < 0) {
-    for (let i = parameters.a;
-      i > parameters.b + parameters.deltaX;
-      i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
-      const calcF = calculationNumber(i);
-      let F: string | number;
-      if (calcF === Infinity) {
-        F = 'бесконечность';
-      } else if (Number.isNaN(calcF)) {
-        F = 'не число';
-      } else {
-        F = calcF;
-      }
+  for (let i = parameters.a; i <= parameters.b; i += parameters.deltaX) {
+    const calcF = calculationNumber(i);
 
-      data.push({
-        n: index,
-        Xn: i,
-        F,
-      });
-      index += 1;
+    let F: string | number;
+    if (calcF === Infinity) {
+      F = 'бесконечность';
+    } else if (Number.isNaN(calcF)) {
+      F = 'не число';
+    } else {
+      F = calcF;
     }
-  } else {
-    for (let i = parameters.a;
-      i < parameters.b + parameters.deltaX;
-      i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
-      const calcF = calculationNumber(i);
-      let F: string | number;
-      if (calcF === Infinity) {
-        F = 'бесконечность';
-      } else if (Number.isNaN(calcF)) {
-        F = 'не число';
-      } else {
-        F = calcF;
-      }
-      data.push({
-        n: index,
-        Xn: i,
-        F,
-      });
-      index += 1;
-    }
+
+    data.push({
+      n: index,
+      Xn: i,
+      F,
+    });
+
+    index += 1;
   }
+
+  index = 1;
 
   return data;
 };
@@ -103,16 +82,12 @@ const question = async (): Promise<InputsParameters> => {
       throw Error('Введите число');
     }
 
-    if (+valueA === +valueB) {
-      throw Error('Начальное и конечные значения Х не должны совпадать');
-    }
-
     if (+valueA > +valueB && Math.sign(valueDeltaX) > 0) {
       throw Error('При нач. > кон. шаг не может быть положительным');
     }
 
-    if (+valueDeltaX === 0) {
-      throw Error('Шаг не может быть равен нулю');
+    if (+valueDeltaX <= 0) {
+      throw Error('Шаг не может быть меньше или равен нулю');
     }
 
     rl.output.write(color.green(`deltaX = ${valueDeltaX}`));
@@ -143,6 +118,7 @@ const calculationTable = async (): Promise<void> => {
   });
   table.addRows(calculationData);
   table.printTable();
+  return calculationTable()
 };
 
 calculationTable();
