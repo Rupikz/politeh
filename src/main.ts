@@ -43,8 +43,14 @@ const calculation = (parameters: InputsParameters): Calculation[] => {
       i > parameters.b + parameters.deltaX;
       i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
       const calcF = calculationNumber(i);
-
-      const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
+      let F: string | number;
+      if (calcF === Infinity) {
+        F = 'бесконечность';
+      } else if (Number.isNaN(calcF)) {
+        F = 'не число';
+      } else {
+        F = calcF;
+      }
 
       data.push({
         n: index,
@@ -58,9 +64,14 @@ const calculation = (parameters: InputsParameters): Calculation[] => {
       i < parameters.b + parameters.deltaX;
       i = Number((parameters.deltaX + i).toFixed(fixedLength))) {
       const calcF = calculationNumber(i);
-
-      const F = Number.isNaN(calcF) || calcF === Infinity ? 'ошибка' : calcF;
-
+      let F: string | number;
+      if (calcF === Infinity) {
+        F = 'бесконечность';
+      } else if (Number.isNaN(calcF)) {
+        F = 'не число';
+      } else {
+        F = calcF;
+      }
       data.push({
         n: index,
         Xn: i,
@@ -93,7 +104,7 @@ const question = async (): Promise<InputsParameters> => {
     }
 
     if (+valueA === +valueB) {
-      throw Error('Начальное и конечное значение равны');
+      throw Error('Начальное и конечные значения Х не должны совпадать');
     }
 
     if (+valueA > +valueB && Math.sign(valueDeltaX) > 0) {
