@@ -1,8 +1,8 @@
-import { Table } from 'console-table-printer';
-import { rl, questionPromise } from './readlineSettings';
+import { Table } from "console-table-printer";
+import { rl, questionPromise } from "./readlineSettings";
 import {
   isNumber, color, ctg,
-} from './util';
+} from "./util";
 
 const num = 42;
 
@@ -42,9 +42,9 @@ const calculation = (parameters: InputsParameters): Calculation[] => {
 
     let F: string | number;
     if (calcF === Infinity) {
-      F = 'бесконечность';
+      F = "бесконечность";
     } else if (Number.isNaN(calcF)) {
-      F = 'не число';
+      F = "не число";
     } else {
       F = calcF;
     }
@@ -65,29 +65,29 @@ const calculation = (parameters: InputsParameters): Calculation[] => {
 
 const question = async (): Promise<InputsParameters> => {
   try {
-    const valueA = await questionPromise('Введите начальное значение\n---> ');
+    const valueA = await questionPromise("Введите начальное значение\n---> ");
     if (!isNumber(valueA)) {
-      throw Error('Введите число');
+      throw Error("Введите число");
     }
     rl.output.write(color.green(`A = ${valueA}`));
 
-    const valueB = await questionPromise('Введите конечное значение\n---> ');
+    const valueB = await questionPromise("Введите конечное значение\n---> ");
     if (!isNumber(valueB)) {
-      throw Error('Введите число');
+      throw Error("Введите число");
     }
     rl.output.write(color.green(`B = ${valueB}`));
 
-    const valueDeltaX = await questionPromise('Введите шаг изменения переменной\n---> ');
+    const valueDeltaX = await questionPromise("Введите шаг изменения переменной\n---> ");
     if (!isNumber(valueDeltaX)) {
-      throw Error('Введите число');
+      throw Error("Введите число");
     }
 
     if (+valueA > +valueB && Math.sign(valueDeltaX) > 0) {
-      throw Error('При нач. > кон. шаг не может быть положительным');
+      throw Error("При нач. > кон. шаг не может быть положительным");
     }
 
     if (+valueDeltaX <= 0) {
-      throw Error('Шаг не может быть меньше или равен нулю');
+      throw Error("Шаг не может быть меньше или равен нулю");
     }
 
     rl.output.write(color.green(`deltaX = ${valueDeltaX}`));
@@ -110,15 +110,15 @@ const calculationTable = async (): Promise<void> => {
   const calculationData = calculation(parameters);
   const table = new Table({
     columns: [
-      { name: 'n', alignment: 'left', color: 'blue' },
-      { name: 'Xn', alignment: 'right' },
-      { name: 'F', alignment: 'right' },
+      { name: "n", alignment: "left", color: "blue" },
+      { name: "Xn", alignment: "right" },
+      { name: "F", alignment: "right" },
     ],
     sort: (row1: Calculation, row2: Calculation) => row1.n - row2.n,
   });
   table.addRows(calculationData);
   table.printTable();
-  return calculationTable()
+  return calculationTable();
 };
 
 calculationTable();
